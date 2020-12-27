@@ -1,21 +1,10 @@
-import PIL
-import speech_recognition as rec
-import pywhatkit
-import datetime
-import wikipedia
-import pyjokes
-from gtts import gTTS
-import tenorpy
-import playsound
-import urllib
-import random
-import os
-
-
-help_command = "Play ... => to play some media\nTell me the time => For current time\n" \
-               "tell me a joke => For joke(mainly programming)\nShow me something funny => For funny gif" \
-               "\nWhat is/Who is/Tell me about ...=> For wiki content\nrate ...=> For rating something (out of 10)"
-listener = rec.Recognizer()
+from tkinter import *
+from main import *
+root = Tk()
+root.geometry("600x600")
+root.minsize(500, 500)
+root.title("Sid's Assistant")
+root.configure(background="grey")
 
 
 def speak(dialogue):
@@ -28,12 +17,17 @@ def commanding():
     try:
         with rec.Microphone() as source:
             listener.adjust_for_ambient_noise(source, duration=1)
-            print("Listening...")
+            root.update()
+            Label(text="Listening...").pack()
+            root.update()
             voice = listener.listen(source)
             command = listener.recognize_google(voice)
             command = command.lower()
-            print(command)
-            print('Processing please be patient..')
+            root.update()
+            Label(text=command).pack()
+            root.update()
+            Label(text='Processing please be patient..').pack()
+            root.update()
             return command
     except Exception as c:
         print(c)
@@ -41,23 +35,39 @@ def commanding():
 
 def run_program():
     command = commanding()
+    root.update()
     if 'play' in command:
+        root.update()
         song = command.partition('play')
         song = str(song[-1])
         speak('playing '+song+' on youtube')
+        root.update()
+        Label(text='playing ' + song + ' on youtube').pack()
         pywhatkit.playonyt(song)
+        root.update()
     elif 'rate' in command:
         a = random.randint(0, 11)
         cmd = command.partition('rate')
         cmd = cmd[-1]
-        print(str(a)+'/10')
+        root.update()
+        Label(text=str(a)+'/10').pack()
+        root.update()
         speak('I rate '+cmd+' '+str(a)+' out of 10')
+        root.update()
     elif 'command help' in command:
-        print(help_command)
+        root.update()
+        Label(text=help_command).pack()
+        root.update()
     elif 'time' in command:
+        root.update()
         speak("Current time is "+datetime.datetime.now().strftime('%I:%M %p'))
+        root.update()
+        Label(text="Current time is "+datetime.datetime.now().strftime('%I:%M %p')).pack()
+        root.update()
     elif 'joke' in command:
+        root.update()
         speak(pyjokes.get_joke('en', 'all'))
+        root.update()
 
     elif 'funny' in command:
         t = tenorpy.Tenor()
@@ -76,8 +86,16 @@ def run_program():
                 cmd = str(cmd[-1])
             info = wikipedia.summary(cmd)
             speak(info)
-            print(info)
+            Label(text=info).pack()
         except:
             speak('Sorry no information available on ' + command)
+            Label(text='Sorry no information available on ' + command).pack()
 
 
+title = Label(text="Sid's Assistant", background="blue", fg="white", padx=12, pady=5, font=("arial", 19, "bold"))\
+    .pack(fill=X)
+
+speak_button = Button(root, text="Click To Speak", fg="white", background="black", pady=5,
+                      font=("Arial", 10, "bold"), command=run_program)
+speak_button.pack(side=BOTTOM, fill=X)
+root.mainloop()
