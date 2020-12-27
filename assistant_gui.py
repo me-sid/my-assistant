@@ -52,7 +52,8 @@ def run_program():
         root.update()
         Label(text=str(a)+'/10').pack()
         root.update()
-        speak('I rate '+cmd+' '+str(a)+' out of 10')
+        b = 'I rate '+cmd+' '+str(a)+' out of 10'
+        speak(b)
         root.update()
     elif 'command help' in command:
         root.update()
@@ -84,8 +85,11 @@ def run_program():
             elif 'tell' in command:
                 cmd = command.partition('about')
                 cmd = str(cmd[-1])
+            root.update()
             info = wikipedia.summary(cmd)
+            root.update()
             speak(info)
+            root.update()
             Label(text=info).pack()
         except:
             speak('Sorry no information available on ' + command)
@@ -98,4 +102,6 @@ title = Label(text="Sid's Assistant", background="blue", fg="white", padx=12, pa
 speak_button = Button(root, text="Click To Speak", fg="white", background="black", pady=5,
                       font=("Arial", 10, "bold"), command=run_program)
 speak_button.pack(side=BOTTOM, fill=X)
+
+
 root.mainloop()
