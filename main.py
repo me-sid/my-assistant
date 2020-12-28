@@ -10,10 +10,19 @@ import tenorpy
 import playsound
 import urllib
 import random
+import string
+import pyttsx3
 import os
+import time
+# todo in playing voice with gtts do a random string instead of voices.mp3
 
 
-# Assistant Code
+def random_str():
+    letters = string.ascii_letters
+    result_str = ''.join(random.choice(letters) for i in range(5))
+    result_str = result_str + ".mp3"
+    return result_str
+
 
 help_command = "Play ... => to play some media\nTell me the time => For current time\n" \
                "tell me a joke => For joke(mainly programming)\nShow me something funny => For funny gif" \
@@ -22,9 +31,14 @@ listener = rec.Recognizer()
 
 
 def speak(dialogue):
-    tts = gTTS(dialogue, lang_check=True)
-    tts.save('voice.mp3')
-    playsound.playsound('voice.mp3')
+    # engine = pyttsx3.init()
+    # engine.setProperty("rate", 110)
+    # engine.say(dialogue)
+    # engine.runAndWait()
+    rand_str = random_str()
+    tts = gTTS(dialogue, lang='hi')
+    tts.save("sample/"+rand_str)
+    playsound.playsound("sample/"+rand_str)
 
 
 def commanding():
@@ -54,7 +68,8 @@ def run_program():
         root.update()
         song = command.partition('play')
         song = str(song[-1])
-        speak('playing '+song+' on youtube')
+        v = 'playing '+song+' on youtube'
+        speak(v)
         root.update()
         Label(text='playing ' + song + ' on youtube').pack()
         pywhatkit.playonyt(song)
@@ -87,8 +102,8 @@ def run_program():
     elif 'funny' in command:
         t = tenorpy.Tenor()
         gif_url = t.random("Funny")
-        urllib.request.urlretrieve(gif_url, "sample.gif")
-        img = PIL.Image.open("sample.gif")
+        urllib.request.urlretrieve(gif_url, "sample/sample.gif")
+        img = PIL.Image.open("sample/sample.gif")
         img.show()
 
     elif 'what' or 'who' or 'tell' in command:
