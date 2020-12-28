@@ -35,6 +35,8 @@ def speak(dialogue):
     # engine.setProperty("rate", 110)
     # engine.say(dialogue)
     # engine.runAndWait()
+    if not os.path.exists('sample'):
+        os.makedirs('sample')
     rand_str = random_str()
     tts = gTTS(dialogue, lang='hi')
     tts.save("sample/"+rand_str)
