@@ -17,6 +17,11 @@ import time
 # todo in playing voice with gtts do a random string instead of voices.mp3
 
 
+def remove_temp():
+    for file in os.scandir("temp"):
+        os.remove(file.path)
+
+
 def random_str():
     letters = string.ascii_letters
     result_str = ''.join(random.choice(letters) for i in range(5))
@@ -35,12 +40,12 @@ def speak(dialogue):
     # engine.setProperty("rate", 110)
     # engine.say(dialogue)
     # engine.runAndWait()
-    if not os.path.exists('sample'):
-        os.makedirs('sample')
+    if not os.path.exists('temp'):
+        os.makedirs('temp')
     rand_str = random_str()
     tts = gTTS(dialogue, lang='hi')
-    tts.save("sample/"+rand_str)
-    playsound.playsound("sample/"+rand_str)
+    tts.save("temp/"+rand_str)
+    playsound.playsound("temp/"+rand_str)
 
 
 def commanding():
@@ -104,8 +109,8 @@ def run_program():
     elif 'funny' in command:
         t = tenorpy.Tenor()
         gif_url = t.random("Funny")
-        urllib.request.urlretrieve(gif_url, "sample/sample.gif")
-        img = PIL.Image.open("sample/sample.gif")
+        urllib.request.urlretrieve(gif_url, "temp/temp.gif")
+        img = PIL.Image.open("temp/temp.gif")
         img.show()
 
     elif 'what' or 'who' or 'tell' in command:
@@ -125,6 +130,7 @@ def run_program():
         except:
             speak('Sorry no information available on ' + command)
             Label(text='Sorry no information available on ' + command).pack()
+    remove_temp()
 
 
 # GUI -
