@@ -9,3 +9,10 @@ requests==2.25.0
 sqlparse==0.4.1
 tenorpy==1.0.3
 urllib3==1.26.2
+
+pywhatkit~=3.8
+wikipedia~=1.4.0
+pyjokes~=0.6.0
+playsound~=1.2.2
+pyttsx3~=2.90
+gTTS~=2.2.1
