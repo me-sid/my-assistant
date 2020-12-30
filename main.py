@@ -7,14 +7,13 @@ import wikipedia
 import pyjokes
 from gtts import gTTS
 import tenorpy
+import webbrowser
 import playsound
 import urllib
 import random
 import string
 import pyttsx3
 import os
-import time
-# todo in playing voice with gtts do a random string instead of voices.mp3
 
 
 def remove_temp():
@@ -36,14 +35,10 @@ listener = rec.Recognizer()
 
 
 def speak(dialogue):
-    # engine = pyttsx3.init()
-    # engine.setProperty("rate", 110)
-    # engine.say(dialogue)
-    # engine.runAndWait()
     if not os.path.exists('temp'):
         os.makedirs('temp')
     rand_str = random_str()
-    tts = gTTS(dialogue, lang='hi')
+    tts = gTTS(dialogue, lang='en')
     tts.save("temp/"+rand_str)
     playsound.playsound("temp/"+rand_str)
 
@@ -65,7 +60,7 @@ def commanding():
             root.update()
             return command
     except Exception as c:
-        print(c)
+        pass
 
 
 def run_program():
@@ -113,14 +108,40 @@ def run_program():
         img = PIL.Image.open("temp/temp.gif")
         img.show()
 
-    elif 'what' or 'who' or 'tell' in command:
+    elif 'what' in command:
+        cmd = command.partition('is')
+        cmd = str(cmd[-1])
+        root.update()
         try:
-            if 'is' in command:
-                cmd = command.partition('is')
-                cmd = str(cmd[-1])
-            elif 'tell' in command:
-                cmd = command.partition('about')
-                cmd = str(cmd[-1])
+            info = wikipedia.summary(cmd)
+            root.update()
+            speak(info)
+            root.update()
+            Label(text=info).pack()
+        except:
+            speak("No information available on wikipedia")
+            speak("I am searching on google. Please be patient")
+            webbrowser.get('windows-default').open('http://www.google.com/?#q='+cmd)
+
+    elif 'who' in command:
+        cmd = command.partition('is')
+        cmd = str(cmd[-1])
+        root.update()
+        try:
+            info = wikipedia.summary(cmd)
+            root.update()
+            speak(info)
+            root.update()
+            Label(text=info).pack()
+        except:
+            speak("No information available on wikipedia")
+            speak("I am searching on google. Please be patient")
+            webbrowser.get('windows-default').open('http://www.google.com/?#q='+cmd)
+
+    elif 'tell' in command:
+        cmd = command.partition('about')
+        cmd = str(cmd[-1])
+        try:
             root.update()
             info = wikipedia.summary(cmd)
             root.update()
@@ -128,9 +149,17 @@ def run_program():
             root.update()
             Label(text=info).pack()
         except:
-            speak('Sorry no information available on ' + command)
-            Label(text='Sorry no information available on ' + command).pack()
-    remove_temp()
+            speak("No information available on wikipedia")
+            speak("I am searching on google. Please be patient")
+            webbrowser.get('windows-default').open('http://www.google.com/?#q='+cmd)
+    else:
+        speak("Please wait I am searching for it")
+        cmd = command
+        webbrowser.get('windows-default').open('http://www.google.com/?#q='+cmd)
+    try:
+        remove_temp()
+    except Exception as e:
+        print(e)
 
 
 # GUI -
@@ -139,6 +168,7 @@ root.geometry("600x600")
 root.minsize(500, 500)
 root.title("Sid's Assistant")
 root.configure(background="grey")
+root.iconbitmap("icon.ico")
 
 
 title = Label(text="Sid's Assistant", background="blue", fg="white", padx=12, pady=5, font=("arial", 19, "bold"))\
