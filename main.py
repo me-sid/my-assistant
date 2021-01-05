@@ -1,4 +1,5 @@
 from tkinter import *
+from tkinter import ttk
 import PIL
 import speech_recognition as rec
 import pywhatkit
@@ -14,6 +15,34 @@ import random
 import string
 import pyttsx3
 import os
+root = Tk()
+root.geometry("600x600")
+root.minsize(500, 500)
+root.title("Sid's Assistant")
+root.iconbitmap("icon.ico")
+root.configure(background="dark grey")
+
+# Frames
+f1 = Frame(root, background="dark grey")
+f1.pack(side=TOP, fill=X)
+
+f2 = Frame(root, background="dark grey", padx=7)
+f2.pack(fill=BOTH)
+
+f3 = Frame(root, background="black")
+f3.pack(side=BOTTOM, fill=X)
+
+title_label = Label(f1, text="SciPi", fg="aqua", background="dark grey", font=("Roboto", 20, "bold"))
+title_label.pack()
+
+
+# Message Functions
+def user_msg(text):
+    Label(f2, text=text, background="light blue", fg="black", justify=RIGHT).pack(anchor="ne")
+
+
+def assistant_msg(text):
+    Label(f2, text=text, background="light blue", fg="black", justify=LEFT).pack(anchor='nw')
 
 
 def remove_temp():
@@ -48,19 +77,20 @@ def commanding():
         with rec.Microphone() as source:
             listener.adjust_for_ambient_noise(source, duration=1)
             root.update()
-            Label(text="Listening...").pack()
+            assistant_msg('Listening')
             root.update()
             voice = listener.listen(source)
             command = listener.recognize_google(voice)
+            root.update()
             command = command.lower()
             root.update()
-            Label(text=command).pack()
+            user_msg(command)
             root.update()
-            Label(text='Processing please be patient..').pack()
+            assistant_msg('Processing please be patient..')
             root.update()
             return command
     except Exception as c:
-        pass
+        print(c)
 
 
 def run_program():
@@ -68,59 +98,77 @@ def run_program():
     root.update()
     if 'play' in command:
         root.update()
-        song = command.partition('play')
-        song = str(song[-1])
-        v = 'playing '+song+' on youtube'
+        cmd = command.partition('play')
+        cmd = str(cmd[-1])
+        root.update()
+        v = 'playing '+cmd+' on youtube'
         speak(v)
         root.update()
-        Label(text='playing ' + song + ' on youtube').pack()
-        pywhatkit.playonyt(song)
+        assistant_msg('playing ' + cmd + ' on youtube')
+        root.update()
+        pywhatkit.playonyt(cmd)
         root.update()
     elif 'rate' in command:
         a = random.randint(0, 11)
+        root.update()
         cmd = command.partition('rate')
+        root.update()
         cmd = cmd[-1]
         root.update()
-        Label(text=str(a)+'/10').pack()
+        assistant_msg(str(a)+'/10')
         root.update()
         b = 'I rate '+cmd+' '+str(a)+' out of 10'
+        root.update()
         speak(b)
         root.update()
     elif 'command help' in command:
         root.update()
-        Label(text=help_command).pack()
+        assistant_msg(help_command)
         root.update()
     elif 'time' in command:
         root.update()
         speak("Current time is "+datetime.datetime.now().strftime('%I:%M %p'))
         root.update()
-        Label(text="Current time is "+datetime.datetime.now().strftime('%I:%M %p')).pack()
+        assistant_msg("Current time is "+datetime.datetime.now().strftime('%I:%M %p'))
         root.update()
     elif 'joke' in command:
         root.update()
-        speak(pyjokes.get_joke('en', 'all'))
+        joke = pyjokes.get_joke('en', 'all')
+        speak(joke)
         root.update()
-
+        assistant_msg(joke)
+        root.update()
     elif 'funny' in command:
+        speak('Please wait, I am showing you something funny')
+        root.update()
         t = tenorpy.Tenor()
         gif_url = t.random("Funny")
+        root.update()
         urllib.request.urlretrieve(gif_url, "temp/temp.gif")
+        root.update()
         img = PIL.Image.open("temp/temp.gif")
+        root.update()
         img.show()
+        root.update()
 
     elif 'what' in command:
         cmd = command.partition('is')
         cmd = str(cmd[-1])
         root.update()
         try:
-            info = wikipedia.summary(cmd)
+            info = wikipedia.summary(cmd, sentences=3)
+            info = info.replace(".", ".\n")
             root.update()
             speak(info)
             root.update()
-            Label(text=info).pack()
+            assistant_msg(info)
+            root.update()
         except:
-            speak("No information available on wikipedia")
-            speak("I am searching on google. Please be patient")
+            root.update()
+            speak("I am searching for it. Please be patient")
+            root.update()
+            assistant_msg("I am searching for it. Please be patient")
+            root.update()
             webbrowser.get('windows-default').open('http://www.google.com/?#q='+cmd)
 
     elif 'who' in command:
@@ -128,33 +176,51 @@ def run_program():
         cmd = str(cmd[-1])
         root.update()
         try:
-            info = wikipedia.summary(cmd)
+            info = wikipedia.summary(cmd, sentences=3)
+            info = info.replace(".", ".\n")
+            root.update()
+            assistant_msg(text=info)
             root.update()
             speak(info)
             root.update()
-            Label(text=info).pack()
         except:
-            speak("No information available on wikipedia")
-            speak("I am searching on google. Please be patient")
+            root.update()
+            speak("I am searching for it. Please be patient")
+            root.update()
+            assistant_msg("I am searching for it. Please be patient")
+            root.update()
             webbrowser.get('windows-default').open('http://www.google.com/?#q='+cmd)
+            root.update()
 
     elif 'tell' in command:
         cmd = command.partition('about')
+        root.update()
         cmd = str(cmd[-1])
+        root.update()
         try:
             root.update()
-            info = wikipedia.summary(cmd)
+            info = wikipedia.summary(cmd, sentences=3)
+            info = info.replace(".", ".\n")
             root.update()
             speak(info)
             root.update()
-            Label(text=info).pack()
+            assistant_msg(text=info)
+            root.update()
         except:
-            speak("No information available on wikipedia")
-            speak("I am searching on google. Please be patient")
+            root.update()
+            speak("I am searching for it. Please be patient")
+            root.update()
+            assistant_msg("I am searching for it. Please be patient")
+            root.update()
             webbrowser.get('windows-default').open('http://www.google.com/?#q='+cmd)
+            root.update()
     else:
+        root.update()
         speak("Please wait I am searching for it")
+        root.update()
+        assistant_msg("Please wait I am searching for it")
         cmd = command
+        root.update()
         webbrowser.get('windows-default').open('http://www.google.com/?#q='+cmd)
     try:
         remove_temp()
@@ -162,21 +228,14 @@ def run_program():
         print(e)
 
 
-# GUI -
-root = Tk()
-root.geometry("600x600")
-root.minsize(500, 500)
-root.title("Sid's Assistant")
-root.configure(background="grey")
-root.iconbitmap("icon.ico")
+def greet():
+    speak('Hi, How can I help you')
+    assistant_msg('Hi\nHow can I help you?')
 
 
-title = Label(text="Sid's Assistant", background="blue", fg="white", padx=12, pady=5, font=("arial", 19, "bold"))\
-    .pack(fill=X)
+greet()
 
-speak_button = Button(root, text="Click To Speak", fg="white", background="black", pady=5,
-                      font=("Arial", 10, "bold"), command=run_program)
-speak_button.pack(side=BOTTOM, fill=X)
-
+speak_btn = Button(f3, text="Click to speak", command=run_program)
+speak_btn.pack(fill=X)
 
 root.mainloop()
