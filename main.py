@@ -16,7 +16,7 @@ import string
 import pyttsx3
 import os
 root = Tk()
-root.geometry("600x600")
+root.geometry("1200x700")
 root.minsize(500, 500)
 root.title("Sid's Assistant")
 root.iconbitmap("icon.ico")
@@ -102,9 +102,9 @@ def run_program():
         cmd = str(cmd[-1])
         root.update()
         v = 'playing '+cmd+' on youtube'
-        speak(v)
         root.update()
-        assistant_msg('playing ' + cmd + ' on youtube')
+        assistant_msg(v)
+        speak(v)
         root.update()
         pywhatkit.playonyt(cmd)
         root.update()
@@ -115,9 +115,9 @@ def run_program():
         root.update()
         cmd = cmd[-1]
         root.update()
-        assistant_msg(str(a)+'/10')
+        b = 'I rate ' + cmd + ' ' + str(a) + ' out of 10'
         root.update()
-        b = 'I rate '+cmd+' '+str(a)+' out of 10'
+        assistant_msg(b)
         root.update()
         speak(b)
         root.update()
@@ -127,16 +127,16 @@ def run_program():
         root.update()
     elif 'time' in command:
         root.update()
-        speak("Current time is "+datetime.datetime.now().strftime('%I:%M %p'))
+        assistant_msg("Current time is " + datetime.datetime.now().strftime('%I:%M %p'))
         root.update()
-        assistant_msg("Current time is "+datetime.datetime.now().strftime('%I:%M %p'))
+        speak("Current time is "+datetime.datetime.now().strftime('%I:%M %p'))
         root.update()
     elif 'joke' in command:
         root.update()
         joke = pyjokes.get_joke('en', 'all')
-        speak(joke)
-        root.update()
         assistant_msg(joke)
+        root.update()
+        speak(joke)
         root.update()
     elif 'funny' in command:
         speak('Please wait, I am showing you something funny')
@@ -159,15 +159,15 @@ def run_program():
             info = wikipedia.summary(cmd, sentences=3)
             info = info.replace(".", ".\n")
             root.update()
-            speak(info)
+            assistant_msg(text=info)
             root.update()
-            assistant_msg(info)
+            speak(info)
             root.update()
         except:
             root.update()
-            speak("I am searching for it. Please be patient")
-            root.update()
             assistant_msg("I am searching for it. Please be patient")
+            root.update()
+            speak("I am searching for it. Please be patient")
             root.update()
             webbrowser.get('windows-default').open('http://www.google.com/?#q='+cmd)
 
@@ -184,10 +184,11 @@ def run_program():
             speak(info)
             root.update()
         except:
-            root.update()
-            speak("I am searching for it. Please be patient")
+
             root.update()
             assistant_msg("I am searching for it. Please be patient")
+            root.update()
+            speak("I am searching for it. Please be patient")
             root.update()
             webbrowser.get('windows-default').open('http://www.google.com/?#q='+cmd)
             root.update()
@@ -198,27 +199,26 @@ def run_program():
         cmd = str(cmd[-1])
         root.update()
         try:
-            root.update()
             info = wikipedia.summary(cmd, sentences=3)
             info = info.replace(".", ".\n")
             root.update()
-            speak(info)
-            root.update()
             assistant_msg(text=info)
+            root.update()
+            speak(info)
             root.update()
         except:
             root.update()
-            speak("I am searching for it. Please be patient")
-            root.update()
             assistant_msg("I am searching for it. Please be patient")
             root.update()
+            root.update()
+            speak("I am searching for it. Please be patient")
             webbrowser.get('windows-default').open('http://www.google.com/?#q='+cmd)
             root.update()
     else:
         root.update()
-        speak("Please wait I am searching for it")
-        root.update()
         assistant_msg("Please wait I am searching for it")
+        root.update()
+        speak("Please wait I am searching for it")
         cmd = command
         root.update()
         webbrowser.get('windows-default').open('http://www.google.com/?#q='+cmd)
@@ -229,13 +229,13 @@ def run_program():
 
 
 def greet():
-    speak('Hi, How can I help you')
     assistant_msg('Hi\nHow can I help you?')
+    speak('Hi, How can I help you')
 
 
 greet()
 
-speak_btn = Button(f3, text="Click to speak", command=run_program)
+speak_btn = Button(f3, text="Click to speak", command=run_program, background="black", fg="white", font=12, pady=5)
 speak_btn.pack(fill=X)
 
 root.mainloop()
