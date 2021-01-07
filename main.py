@@ -1,5 +1,5 @@
 from tkinter import *
-from tkinter import ttk
+from tkinter.font import Font
 import PIL
 import speech_recognition as rec
 import pywhatkit
@@ -15,34 +15,38 @@ import random
 import string
 import pyttsx3
 import os
+background_color = "#2b2b2b"
 root = Tk()
 root.geometry("1200x700")
 root.minsize(500, 500)
-root.title("Sid's Assistant")
+root.title("SciPi")
 root.iconbitmap("icon.ico")
-root.configure(background="dark grey")
+root.configure(background=background_color)
 
 # Frames
-f1 = Frame(root, background="dark grey")
+f1 = Frame(root, background=background_color)
 f1.pack(side=TOP, fill=X)
 
-f2 = Frame(root, background="dark grey", padx=7)
+f2 = Frame(root, background=background_color, padx=7)
 f2.pack(fill=BOTH)
 
 f3 = Frame(root, background="black")
 f3.pack(side=BOTTOM, fill=X)
 
-title_label = Label(f1, text="SciPi", fg="aqua", background="dark grey", font=("Roboto", 20, "bold"))
+ffont = Font(family='Fixedsys', size=42, slant='italic')
+title_label = Label(f1, text="SciPi", fg="red", background=background_color, font=ffont)
 title_label.pack()
 
 
 # Message Functions
 def user_msg(text):
-    Label(f2, text=text, background="light blue", fg="black", justify=RIGHT).pack(anchor="ne")
+    a = Label(f2, text=text, background="#edc5c5", fg="black", justify=RIGHT, borderwidth=5, font=("arial", 12))
+    a.pack(anchor="ne")
 
 
 def assistant_msg(text):
-    Label(f2, text=text, background="light blue", fg="black", justify=LEFT).pack(anchor='nw')
+    a = Label(f2, text=text, background="#ffffff", fg="black", justify=LEFT, borderwidth=5,  font=("arial", 12))
+    a.pack(anchor='nw')
 
 
 def remove_temp():
@@ -109,7 +113,7 @@ def run_program():
         pywhatkit.playonyt(cmd)
         root.update()
     elif 'rate' in command:
-        a = random.randint(0, 11)
+        a = random.randint(0, 10)
         root.update()
         cmd = command.partition('rate')
         root.update()
